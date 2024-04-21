@@ -152,11 +152,11 @@ void turn_right(int delay_time){
   delay(forward_time);
 }
 
-// circumference not tested
+// need calibration
 void circumference(void){ // circulate clockwise for the final C
   if (leftSensor && rightSensor){ // black black
     analogWrite(pinL_PWM, L_Motor_spd);
-    analogWrite(pinR_PWM, global_spd / 2);
+    analogWrite(pinR_PWM, global_spd / 1.5);
     digitalWrite(pinL_DIR, HIGH);
     digitalWrite(pinR_DIR, HIGH); 
   }else if (!leftSensor && rightSensor){ // white, black
@@ -166,7 +166,7 @@ void circumference(void){ // circulate clockwise for the final C
     digitalWrite(pinR_DIR, HIGH);
   }else if (leftSensor && !rightSensor){ // black, white
     analogWrite(pinL_PWM, L_Motor_spd);
-    analogWrite(pinR_PWM, global_spd / 3);
+    analogWrite(pinR_PWM, global_spd / 2);
     digitalWrite(pinL_DIR, HIGH);
     digitalWrite(pinR_DIR, HIGH);
   }
