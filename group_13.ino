@@ -5,7 +5,7 @@
 
   Group No. (number of your project box):  13
   Group Member 1 (name & SID): Pun Chun Cheung 21052680
-  Group Member 2 (name & SID):
+  Group Member 2 (name & SID): Poon Wing Yin 21053531
   
 */
 
