@@ -11,9 +11,11 @@
 
 // assign meaningful names to those pins that will be used
 
-const int pinL_Sensor = A5;      //pin A5: left sensor 
-const int pinB_Sensor = A4;      //pin A4: bumper sensor
-const int pinR_Sensor = A3;      //pin A3: right sensor 
+const int pinL_Sensor = A4;      //pin A5: left sensor 
+const int pinB_Sensor = A0;      //pin A4: bumper sensor
+const int pinR_Sensor = A3;      //pin A3: right sensor
+const int pinL2_Sensor = A5;
+const int pinR2_Sensor = A2;
 
 const int pinL_PWM = 9;          //pin D9: left motor speed
 const int pinL_DIR = 10;         //pin D10: left motor direction
@@ -26,6 +28,9 @@ const int pinR_DIR = 12;         //pin D12: right motor direction
 int bumperSensor = 1;  // not sensing white
 int leftSensor = 1;    // not sensing white
 int rightSensor = 1;   // not sensing white
+int adjustleftsensor = 1;
+int adjustrightsensor = 1;
+  
 
 int countBumper = 0;   // bumper sensor not triggered yet
 
@@ -41,7 +46,8 @@ void setup ()
   pinMode(pinB_Sensor, INPUT);
   pinMode(pinL_Sensor, INPUT);
   pinMode(pinR_Sensor, INPUT);
-  
+  pinMode(pinL2_Sensor, INPUT);
+  pinMode(pinR2_Sensor, INPUT);
   pinMode(pinL_DIR, OUTPUT);
   pinMode(pinR_DIR, OUTPUT);
   
@@ -61,8 +67,10 @@ void loop() {
 
   // Arduino is reading the sensor measurements
   bumperSensor = digitalRead(pinB_Sensor);
-  leftSensor = digitalRead(pinL_Sensor);
-  rightSensor = digitalRead(pinR_Sensor);
+  leftSensor = digitalRead(pinL2_Sensor);
+  rightSensor = digitalRead(pinR2_Sensor);
+  adjustleftsensor = digitalRead(pinL_Sensor);
+  adjustrightsensor = digitalRead(pinR_Sensor);
   
   // car stops at the start position when bumper sensor no trigger
   if ( bumperSensor && countBumper == 0 ) {
