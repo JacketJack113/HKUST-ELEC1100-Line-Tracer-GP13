@@ -11,12 +11,12 @@
 
 // assign meaningful names to those pins that will be used
 
-const int pinL_Sensor = A5;      //pin A5: left sensor 
-const int pinB_Sensor = A4;      //pin A4: bumper sensor
+const int pinL_Sensor = A4;      //pin A5: left sensor 
+const int pinB_Sensor = A1;      //pin A4: bumper sensor
 const int pinR_Sensor = A3;      //pin A3: right sensor 
 // not yet install
-const int pinL_Far_Sensor = A2;  // far left sensor
-const int pinR_Far_Sensor = A1;  // far right sensor
+const int pinL_Far_Sensor = A5;  // far left sensor
+const int pinR_Far_Sensor = A2;  // far right sensor
 
 const int pinL_PWM = 9;          //pin D9: left motor speed
 const int pinL_DIR = 10;         //pin D10: left motor direction
@@ -29,8 +29,8 @@ const int pinR_DIR = 12;         //pin D12: right motor direction
 int bumperSensor = 1;  // not sensing white
 int leftSensor = 1;    // not sensing white
 int rightSensor = 1;   // not sensing white
-int leftFarSensor = 1;
-int rightFarSensor = 1;
+int left_Far_Sensor = 1;
+int right_Far_Sensor = 1;
 
 int countBumper = 0;   // bumper sensor not triggered yet
 int countT = 1; // on the first T-junction at the beginning
@@ -89,22 +89,23 @@ void loop(){
   bumperSensor = digitalRead(pinB_Sensor);
   leftSensor = digitalRead(pinL_Sensor);
   rightSensor = digitalRead(pinR_Sensor);
-  leftFarSensor = digitalRead(pinL_Far_Sensor);
-  rightFarSensor = digitalRead(pinR_Far_Sensor);
+  left_Far_Sensor = digitalRead(pinL_Far_Sensor);
+  right_Far_Sensor = digitalRead(pinR_Far_Sensor);
   bumperSensor == 1;
 
   if (countBumper == 0 || countBumper == 1)
     switch(countT){
       case 1: task1(); break;
       case 2: task2(); break;
-      case 3: task3(); break;
-      case 4: task4(); break;
-      case 5: task5(); break;
-      case 6: task6(); break;
-      case 7: task7(); break;
+//      case 3: task3(); break;
+//      case 4: task4(); break;
+//      case 5: task5(); break;
+//      case 6: task6(); break;
+//      case 7: task7(); break;
+//    }
     }
-  else if (countBumper == 2)
-    task8();
+//  else if (countBumper == 2)
+//    task8();
 }
 
 void forward(){
@@ -152,7 +153,7 @@ void turn_right(int delay_time){
   delay(forward_time);
 }
 
-// need calibration
+// circumference not tested
 void circumference(void){ // circulate clockwise for the final C
   if (leftSensor && rightSensor){ // black black
     analogWrite(pinL_PWM, L_Motor_spd);
@@ -254,10 +255,10 @@ void task6(void){
 }
 
 void task7(void){
-  if (!bumper_sensor) {  // last T-junction
+  if (!bumperSensor) {  // last T-junction
     countT++;
     countBumper++;
-  }else if (!inC && !right_Far_Sensor){  // into the C
+  }else if (!in_C && !right_Far_Sensor){  // into the C
     turn_right(delay_90);
     in_C = true;
   }else if (in_C)
