@@ -131,7 +131,7 @@ void trace_line(void){  // tracing the line
   }
 }
 
-void turn_left(void){ // turnings at L,T-junctions
+void turn_left(int delay_time){ // turnings at L,T-junctions
   delay(150);
   analogWrite(pinL_PWM, L_Motor_spd);
   analogWrite(pinR_PWM, global_spd);
@@ -143,7 +143,7 @@ void turn_left(void){ // turnings at L,T-junctions
 //  delay(forward_time);
 }
 
-void turn_right(void){
+void turn_right(int delay_time){
   delay(150);
   analogWrite(pinL_PWM, L_Motor_spd);
   analogWrite(pinR_PWM, global_spd);
