@@ -12,7 +12,7 @@
 // assign meaningful names to those pins that will be used
 
 const int pinL_Sensor = A4;      //pin A5: left sensor 
-const int pinB_Sensor = A1;      //pin A4: bumper sensor
+const int pinB_Sensor = A0;      //pin A4: bumper sensor
 const int pinR_Sensor = A3;      //pin A3: right sensor 
 // not yet install
 const int pinL_Far_Sensor = A5;  // far left sensor
