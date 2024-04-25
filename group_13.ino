@@ -36,14 +36,14 @@ int countBumper = 0;   // bumper sensor not triggered yet
 int countT = 1; // on the first T-junction at the beginning
 bool in_C = false; // for task7
 
-const int global_spd = 100;
-const int L_Motor_spd = global_spd+15;
+const int global_spd = 125;
+const int L_Motor_spd = 130;
 const int backward_time = 800;
 // delay for different turning angles
-const int delay_90 = 250;
-const int delay_180 = 500;
-const int delay_360 = 1100;
-const int forward_time = 300; // time going forward after turning
+const int delay_90 = 450;
+const int delay_180 = 850;
+const int delay_360 = 1700;
+const int forward_time = 150; // time going forward after turning
 
 // declare all functions
 void forward(void); // go forward
@@ -93,19 +93,19 @@ void loop(){
   right_Far_Sensor = digitalRead(pinR_Far_Sensor);
   bumperSensor == 1;
 
+//  task1();
   if (countBumper == 0 || countBumper == 1)
     switch(countT){
       case 1: task1(); break;
       case 2: task2(); break;
-//      case 3: task3(); break;
-//      case 4: task4(); break;
-//      case 5: task5(); break;
-//      case 6: task6(); break;
-//      case 7: task7(); break;
-//    }
+      case 3: task3(); break;
+      case 4: task4(); break;
+      case 5: task5(); break;
+      case 6: task6(); break;
+      case 7: task7(); break;
     }
-//  else if (countBumper == 2)
-//    task8();
+  else if (countBumper == 2)
+    task8();
 }
 
 void forward(){
@@ -116,7 +116,7 @@ void forward(){
 }
 
 void trace_line(void){  // tracing the line
-  if ( leftSensor && rightSensor ) {  // black, black -> go straight
+  if ( leftSensor == rightSensor ) {  // black, black -> go straight
       forward(); 
    }else if ( !leftSensor && rightSensor ) { // white, black -> too right
       analogWrite(pinL_PWM, 0);
@@ -131,26 +131,28 @@ void trace_line(void){  // tracing the line
   }
 }
 
-void turn_left(int delay_time){ // turnings at L,T-junctions
-  analogWrite(pinL_PWM, L_Motor_spd*2);
-  analogWrite(pinR_PWM, global_spd*2);
+void turn_left(void){ // turnings at L,T-junctions
+  delay(150);
+  analogWrite(pinL_PWM, L_Motor_spd);
+  analogWrite(pinR_PWM, global_spd);
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
-  delay(delay_time);
+  delay(delay_time-25);
   // prevent sensing junctions as the car go back a little bit after turning
-  forward();
-  delay(forward_time);
+//  forward();
+//  delay(forward_time);
 }
 
-void turn_right(int delay_time){
-  analogWrite(pinL_PWM, L_Motor_spd*2);
-  analogWrite(pinR_PWM, global_spd*2);
+void turn_right(void){
+  delay(150);
+  analogWrite(pinL_PWM, L_Motor_spd);
+  analogWrite(pinR_PWM, global_spd);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
   delay(delay_time);
   // prevent sensing junctions as the car go back a little bit after turning
-  forward();
-  delay(forward_time);
+//  forward();
+//  delay(forward_time);
 }
 
 // circumference not tested
