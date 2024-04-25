@@ -244,7 +244,7 @@ void task5(void){
   }
   else{
     trace_line();
-    delay(delay_90);
+//    delay(delay_90);
   }
 }
 
