@@ -40,7 +40,7 @@ const int global_spd = 125;
 const int L_Motor_spd = 130;
 const int backward_time = 800;
 // delay for different turning angles
-const int delay_90 = 450;
+const int delay_90 = 550;
 const int delay_180 = 850;
 const int delay_360 = 1700;
 const int forward_time = 150; // time going forward after turning
@@ -122,37 +122,47 @@ void trace_line(void){  // tracing the line
       analogWrite(pinL_PWM, 0);
       analogWrite(pinR_PWM, global_spd);
       digitalWrite(pinL_DIR, HIGH);
-      digitalWrite(pinR_DIR, HIGH);  
+      digitalWrite(pinR_DIR, HIGH);
    }else if ( leftSensor && !rightSensor ) { // black, white -> too left
       analogWrite(pinL_PWM, L_Motor_spd);
       analogWrite(pinR_PWM, 0);
       digitalWrite(pinL_DIR, HIGH);
-      digitalWrite(pinR_DIR, HIGH);  
+      digitalWrite(pinR_DIR, HIGH);
   }
 }
 
 void turn_left(int delay_time){ // turnings at L,T-junctions
-  delay(150);
+  delay(100);
+  analogWrite(pinL_PWM, L_Motor_spd);
+  analogWrite(pinR_PWM, global_spd);
+  digitalWrite(pinL_DIR, LOW);
+  digitalWrite(pinR_DIR, LOW);
+  delay(10);
   analogWrite(pinL_PWM, L_Motor_spd);
   analogWrite(pinR_PWM, global_spd);
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
-  delay(delay_time-25);
+  delay(delay_time-50);
   // prevent sensing junctions as the car go back a little bit after turning
-//  forward();
-//  delay(forward_time);
+  forward();
+  delay(forward_time);
 }
 
 void turn_right(int delay_time){
-  delay(150);
+  delay(100);
+  analogWrite(pinL_PWM, L_Motor_spd);
+  analogWrite(pinR_PWM, global_spd);
+  digitalWrite(pinL_DIR, LOW);
+  digitalWrite(pinR_DIR, LOW);
+  delay(10);
   analogWrite(pinL_PWM, L_Motor_spd);
   analogWrite(pinR_PWM, global_spd);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
   delay(delay_time);
   // prevent sensing junctions as the car go back a little bit after turning
-//  forward();
-//  delay(forward_time);
+  forward();
+  delay(forward_time);
 }
 
 // circumference not tested
@@ -192,7 +202,9 @@ void task1(void){
   else if ( !left_Far_Sensor && !right_Far_Sensor ) {
     turn_right(delay_90);
     countT++;
-  }else
+    forward();
+    delay(150);
+    }else
     trace_line();
 }
 
