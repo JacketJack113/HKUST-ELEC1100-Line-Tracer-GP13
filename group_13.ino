@@ -14,7 +14,6 @@
 const int pinL_Sensor = A4;      //pin A5: left sensor 
 const int pinB_Sensor = A0;      //pin A4: bumper sensor
 const int pinR_Sensor = A3;      //pin A3: right sensor 
-// not yet install
 const int pinL_Far_Sensor = A5;  // far left sensor
 const int pinR_Far_Sensor = A2;  // far right sensor
 
@@ -36,22 +35,22 @@ int countBumper = 0;   // bumper sensor not triggered yet
 int countT = 1; // on the first T-junction at the beginning
 bool in_C = false; // for task7
 
-const int global_spd = 125;
-const int L_Motor_spd = 130;
+const int global_spd = 195;
+const int L_Motor_spd = 200;
 const int backward_time = 800;
 // delay for different turning angles
-const int delay_90 = 550;
-const int delay_180 = 850;
-const int delay_360 = 1700;
+const int delay_90 = 300;
+const int delay_180 = 600;
+const int delay_360 = 1250;
 const int forward_time = 150; // time going forward after turning
+
 
 // declare all functions
 void forward(void); // go forward
 void trace_line(void);  // tracing the line
 void turn_left(int delay_time); // turnings at L,T-junctions
 void turn_right(int delay_time);
-// not yet implement
-void circumference(void); // circulation clockwise for the final C
+void circumference(void); // circulating clockwise for the final C
 void task1(void);
 void task2(void);
 void task3(void);
@@ -93,7 +92,6 @@ void loop(){
   right_Far_Sensor = digitalRead(pinR_Far_Sensor);
   bumperSensor == 1;
 
-//  task1();
   if (countBumper == 0 || countBumper == 1)
     switch(countT){
       case 1: task1(); break;
@@ -116,7 +114,7 @@ void forward(){
 }
 
 void trace_line(void){  // tracing the line
-  if ( leftSensor == rightSensor ) {  // black, black -> go straight
+  if ( leftSensor == rightSensor ) {  // black, black (or white, white) -> go straight
       forward(); 
    }else if ( !leftSensor && rightSensor ) { // white, black -> too right
       analogWrite(pinL_PWM, 0);
@@ -131,7 +129,9 @@ void trace_line(void){  // tracing the line
   }
 }
 
-void turn_left(int delay_time){ // turnings at L,T-junctions
+// turnings at L,T-junctions
+void turn_left(int delay_time){
+  forward();
   delay(100);
   analogWrite(pinL_PWM, L_Motor_spd);
   analogWrite(pinR_PWM, global_spd);
@@ -149,6 +149,7 @@ void turn_left(int delay_time){ // turnings at L,T-junctions
 }
 
 void turn_right(int delay_time){
+  forward();
   delay(100);
   analogWrite(pinL_PWM, L_Motor_spd);
   analogWrite(pinR_PWM, global_spd);
@@ -203,8 +204,8 @@ void task1(void){
     turn_right(delay_90);
     countT++;
     forward();
-    delay(150);
-    }else
+    delay(100);
+  }else
     trace_line();
 }
 
@@ -214,10 +215,10 @@ void task2(void){
     // 360 degree turn
     turn_left(delay_360);
   } // L-junctions
-  else if (!left_Far_Sensor && right_Far_Sensor){
+  else if (!left_Far_Sensor && !leftSensor && right_Far_Sensor){
     turn_left(delay_90);
   }
-  else if (left_Far_Sensor && !right_Far_Sensor){
+  else if (left_Far_Sensor && !right_Far_Sensor && !rightSensor){
     turn_right(delay_90);
   }
   else  // straight line
@@ -251,7 +252,7 @@ void task5(void){
     countT++;
     // 180 degree turn
     turn_left(delay_180);
-  }else if (!right_Far_Sensor){  // only turn right, ignore left junction
+  }else if (!right_Far_Sensor && !rightSensor){  // only turn right, ignore left junction
     turn_right(delay_90);
   }
   else{
@@ -272,7 +273,7 @@ void task7(void){
   if (!bumperSensor) {  // last T-junction
     countT++;
     countBumper++;
-  }else if (!in_C && !right_Far_Sensor){  // into the C
+  }else if (!in_C && !right_Far_Sensor && !rightSensor){  // into the C
     turn_right(delay_90);
     in_C = true;
   }else if (in_C)
