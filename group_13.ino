@@ -275,7 +275,8 @@ void task2(void){
     analogWrite(pinL_PWM, 0);
     analogWrite(pinR_PWM, 0);
     delay(500);
-    for (int i = 0; i < 350; ++i){
+    // prevent detect same T-junction
+    for (int i = 0; i < 500; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
       trace_line();
