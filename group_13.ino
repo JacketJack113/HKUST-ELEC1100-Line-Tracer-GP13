@@ -272,32 +272,50 @@ void task1(){
 }
 
 void task2(){
-  if (!left_Far_Sensor && !right_Far_Sensor )  {// turn 360 T
-    countT++;
-    self_turn(delay_180*2);
-    for (int i = 0; i < 350; ++i){
-      leftSensor = digitalRead(pinL_Sensor);
-      rightSensor = digitalRead(pinR_Sensor);
+  // if (!left_Far_Sensor && !right_Far_Sensor )  {// turn 360 T
+  //   countT++;
+  //   self_turn(delay_180*2);
+  //   for (int i = 0; i < 350; ++i){
+  //     leftSensor = digitalRead(pinL_Sensor);
+  //     rightSensor = digitalRead(pinR_Sensor);
+  //     trace_line();
+  //     delay(1);
+  //   }
+  // } // L-junctions
+  // else if (!left_Far_Sensor && !leftSensor){
+  //   turn_left(delay_90);
+  // } else if (!right_Far_Sensor && !rightSensor){
+  //   turn_right(delay_90);
+  // } else {          // straight line
+  //   trace_line();
+  // }
+  while ((left_Far_Sensor == HIGH)&&(right_Far_Sensor == HIGH)) {
+    if (!left_Far_Sensor) {
+      turn_left(delay_90);
+    } else if (!right_Far_Sensor) {
+      turn_right(delay_90);
+    } else {
       trace_line();
-      delay(1);
     }
-  } // L-junctions
-  else if (!left_Far_Sensor && !leftSensor){
-    turn_left(delay_90);
-  } else if (!right_Far_Sensor && !rightSensor){
-    turn_right(delay_90);
-  } else {          // straight line
-    trace_line();
   }
+  countT++;
+  self_turn(delay_180*2);
+  trace_line();
+  delay(200);
 }
 
 void task3(){
   if ( !left_Far_Sensor && !right_Far_Sensor ) {  // T-junction
     countT++;
     // stop for 1 second
-    analogWrite(pinL_PWM, 0);
-    analogWrite(pinR_PWM, 0);
-    delay(1000);
+    analogWrite(pinL_PWM, L_Motor_spd);
+    analogWrite(pinR_PWM, global_spd);
+    digitalWrite(pinL_DIR, LOW);
+    digitalWrite(pinR_DIR, LOW);
+    delay(15);
+    digitalWrite(pinL_DIR, 0);
+    digitalWrite(pinR_DIR, 0);
+    delay(975);
     // prevent detect same T-junction at next task
     forward();
     delay(300);
