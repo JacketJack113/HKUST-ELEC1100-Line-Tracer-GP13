@@ -175,14 +175,16 @@ void turn_left(int delay_time){
 //  digitalWrite(pinL_DIR, LOW);
 //  digitalWrite(pinR_DIR, LOW);
 //  delay(10);
-  analogWrite(pinL_PWM, 110);
-  analogWrite(pinR_PWM, 255);
+  analogWrite(pinL_PWM, 165);
+  analogWrite(pinR_PWM, 235);
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
-  delay(delay_time-25);
-  analogWrite(pinL_PWM, 0);
-  analogWrite(pinR_PWM, 0);
-  delay(500);
+  delay(delay_time+90);
+  analogWrite(pinL_PWM, 165);
+  analogWrite(pinR_PWM, 235);
+  digitalWrite(pinL_DIR, HIGH);
+  digitalWrite(pinR_DIR, LOW);
+  delay(25);
   for (int i = 0; i < 150; ++i){
     leftSensor = digitalRead(pinL_Sensor);
     rightSensor = digitalRead(pinR_Sensor);
@@ -199,14 +201,16 @@ void turn_right(int delay_time){
 //  digitalWrite(pinL_DIR, LOW);
 //  digitalWrite(pinR_DIR, LOW);
 //  delay(10);
-  analogWrite(pinL_PWM, 255);
-  analogWrite(pinR_PWM, 115);
+  analogWrite(pinL_PWM, 210);
+  analogWrite(pinR_PWM, 170);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
-  delay(delay_time);
-  analogWrite(pinL_PWM, 0);
-  analogWrite(pinR_PWM, 0);
-  delay(500);
+  delay(delay_time+100);
+  analogWrite(pinL_PWM, 210);
+  analogWrite(pinR_PWM, 170);
+  digitalWrite(pinL_DIR, LOW);
+  digitalWrite(pinR_DIR, HIGH);
+  delay(25);
   for (int i = 0; i < 150; ++i){
     leftSensor = digitalRead(pinL_Sensor);
     rightSensor = digitalRead(pinR_Sensor);
@@ -214,7 +218,6 @@ void turn_right(int delay_time){
     delay(1);
   }
 }
-
 void self_turn(int delay_time){
   analogWrite(pinL_PWM, 255);
   analogWrite(pinR_PWM, 125);
@@ -275,8 +278,7 @@ void task2(void){
     analogWrite(pinL_PWM, 0);
     analogWrite(pinR_PWM, 0);
     delay(500);
-    // prevent detect same T-junction
-    for (int i = 0; i < 500; ++i){
+    for (int i = 0; i < 350; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
       trace_line();
