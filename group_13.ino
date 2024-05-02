@@ -268,6 +268,8 @@ void task1(){
   // if encounter the 2nd T-junction
   else if ( !left_Far_Sensor && !right_Far_Sensor ) {
     turn_right(delay_90);
+    forward();
+    delay(250);
     countT++;
   }else
     trace_line();
