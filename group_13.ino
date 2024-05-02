@@ -38,7 +38,7 @@ const int global_spd = 195;
 const int L_Motor_spd = 200;
 const int backward_time = 800;
 // delay for different turning angles
-const int delay_90 = 225;
+const int delay_90 = 320;
 const int delay_180 = 425;
 // const int delay_360 = 850;
 const int forward_time = 50; // time going forward after turning
@@ -178,18 +178,19 @@ void turn_left(int delay_time){
   analogWrite(pinR_PWM, 235);
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
-  delay(delay_time+90);
+  delay(delay_time);
   analogWrite(pinL_PWM, 165);
   analogWrite(pinR_PWM, 235);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
-  delay(25);
-  for (int i = 0; i < 150; ++i){
-    leftSensor = digitalRead(pinL_Sensor);
-    rightSensor = digitalRead(pinR_Sensor);
-    trace_line();
-    delay(1);
-  }
+  delay(15);
+  forward();
+//  for (int i = 0; i < 260; ++i){
+//    leftSensor = digitalRead(pinL_Sensor);
+//    rightSensor = digitalRead(pinR_Sensor);
+//    trace_line();
+//    delay(1);
+//  }
 }
 
 void turn_right(int delay_time){
@@ -204,18 +205,19 @@ void turn_right(int delay_time){
   analogWrite(pinR_PWM, 170);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
-  delay(delay_time+100);
+  delay(delay_time);
   analogWrite(pinL_PWM, 210);
   analogWrite(pinR_PWM, 170);
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
-  delay(25);
-  for (int i = 0; i < 150; ++i){
-    leftSensor = digitalRead(pinL_Sensor);
-    rightSensor = digitalRead(pinR_Sensor);
-    trace_line();
-    delay(1);
-  }
+  delay(15);
+  forward();
+//  for (int i = 0; i < 260; ++i){
+//    leftSensor = digitalRead(pinL_Sensor);
+//    rightSensor = digitalRead(pinR_Sensor);
+//    trace_line();
+//    delay(1);
+//  }
 }
 void self_turn(int delay_time){
   analogWrite(pinL_PWM, 255);
@@ -297,6 +299,11 @@ void task2(){
     } else {
       trace_line();
     }
+    bumperSensor = digitalRead(pinB_Sensor);
+    leftSensor = digitalRead(pinL_Sensor);
+    rightSensor = digitalRead(pinR_Sensor);
+    left_Far_Sensor = digitalRead(pinL_Far_Sensor);
+    right_Far_Sensor = digitalRead(pinR_Far_Sensor);
   }
   countT++;
   self_turn(delay_180*2);
