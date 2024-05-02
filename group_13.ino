@@ -1,6 +1,5 @@
 /*
   ELEC1100 Your Lab#06 & Project Template
-
   To program the car tracking the white line on a dark mat
 
   Group No. (number of your project box):  13
@@ -224,6 +223,11 @@ void self_turn(int delay_time){
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
   delay(delay_time);
+  analogWrite(pinL_PWM, 255);
+  analogWrite(pinR_PWM, 195);
+  digitalWrite(pinL_DIR, LOW);
+  digitalWrite(pinR_DIR, HIGH);
+  delay(25);
 }
 
 // circumference not tested
@@ -270,14 +274,7 @@ void task1(){
 void task2(){
   if (!left_Far_Sensor && !right_Far_Sensor )  {// turn 360 T
     countT++;
-    self_turn(delay_180);
-    analogWrite(pinL_PWM, 0);
-    analogWrite(pinR_PWM, 0);
-    delay(500);
-    self_turn(delay_180);
-    analogWrite(pinL_PWM, 0);
-    analogWrite(pinR_PWM, 0);
-    delay(500);
+    self_turn(delay_180*2);
     for (int i = 0; i < 350; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
