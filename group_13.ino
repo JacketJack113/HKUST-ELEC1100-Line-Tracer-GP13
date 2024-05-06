@@ -31,9 +31,9 @@ int rightSensor = 1;   // not sensing white
 int left_Far_Sensor = 1;
 int right_Far_Sensor = 1;
 
-int countBumper = 0;   // bumper sensor not triggered yet
-int countT = 1; // on the first T-junction at the beginning
-int L_junct = 0;
+int countBumper = 1;   // bumper sensor not triggered yet
+int countT = 2; // on the first T-junction at the beginning
+int L_junct = 6;
 bool in_C = false; // for task7
 
 const int global_spd = 195;
@@ -41,8 +41,8 @@ const int trace_spd = 120;
 const int backward_time = 500;
 // delay for different turning angles
 const int delay_90 = 320;
-const int delay_180 = 625;
-const int delay_360 = 1125;
+const int delay_180 = 575;
+const int delay_360 = 1000;
 
 // declare all functions
 void forward(void); // go forward
@@ -217,26 +217,23 @@ void self_turn(int delay_time){
   digitalWrite(pinR_DIR, HIGH);
   analogWrite(pinL_PWM, 255);
   analogWrite(pinR_PWM, 195);
-  delay(75);
+  delay(50);
 }
 
 // circumference not tested
 void circumference(void){ // circulate clockwise for the final C
-  if (leftSensor && rightSensor){ // black black
-    analogWrite(pinL_PWM, global_spd);
-    analogWrite(pinR_PWM, global_spd / 1.5);
-    digitalWrite(pinL_DIR, HIGH);
-    digitalWrite(pinR_DIR, HIGH); 
-  }else if (!leftSensor && rightSensor){ // white, black
-    analogWrite(pinL_PWM, global_spd);
-    analogWrite(pinR_PWM, global_spd);
-    digitalWrite(pinL_DIR, HIGH);
-    digitalWrite(pinR_DIR, HIGH);
-  }else if (leftSensor && !rightSensor){ // black, white
-    analogWrite(pinL_PWM, global_spd);
-    analogWrite(pinR_PWM, global_spd / 2);
-    digitalWrite(pinL_DIR, HIGH);
-    digitalWrite(pinR_DIR, HIGH);
+  if (leftSensor == rightSensor) {  // black, black (or white, white) -> go straight
+      forward(); 
+   } else if ( !leftSensor ) { // white, black -> too right
+      analogWrite(pinL_PWM, trace_spd/1.25);  // trace_spd/1.25
+      analogWrite(pinR_PWM, min((trace_spd*1.5),255));  // min((trace_spd*1.5),255))
+      digitalWrite(pinL_DIR, LOW);
+      digitalWrite(pinR_DIR, HIGH);
+   } else if ( !rightSensor ) { // black, white -> too left
+      analogWrite(pinL_PWM, min((trace_spd*1.5),255));  // min((trace_spd*1.5),255))
+      analogWrite(pinR_PWM, trace_spd/1.25);  // trace_spd/1.25
+      digitalWrite(pinL_DIR, HIGH);
+      digitalWrite(pinR_DIR, LOW);
   }
 }
 
@@ -332,6 +329,8 @@ void task4(void){
   if ( !left_Far_Sensor && !right_Far_Sensor ) {  // T-junction
     countT++;
     turn_left(delay_90);
+    forward();
+    delay(100);
   } else
     trace_line();
 }
@@ -347,13 +346,15 @@ void task5(void){
     countT++;
     // 180 degree turn
     self_turn(delay_180);
-    for (int i = 0; i < 350; ++i){
+    forward();
+    delay(50);
+    for (int i = 0; i < 300; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
       trace_line();
       delay(1);
-      L_junct = 0;
     }
+    L_junct = 0;
   }else if (!right_Far_Sensor && !rightSensor){  // only turn right, ignore left junction
     turn_right(delay_90);
     L_junct++;
