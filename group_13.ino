@@ -41,8 +41,8 @@ const int trace_spd = 120;
 const int backward_time = 500;
 // delay for different turning angles
 const int delay_90 = 320;
-const int delay_180 = 400;
-const int delay_360 = 1000;
+const int delay_180 = 625;
+const int delay_360 = 1125;
 
 // declare all functions
 void forward(void); // go forward
@@ -209,10 +209,15 @@ void turn_right(int delay_time){
 }
 void self_turn(int delay_time){
   analogWrite(pinL_PWM, 255);
-  analogWrite(pinR_PWM, 225);
+  analogWrite(pinR_PWM, 195);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
   delay(delay_time);
+  digitalWrite(pinL_DIR, LOW);
+  digitalWrite(pinR_DIR, HIGH);
+  analogWrite(pinL_PWM, 255);
+  analogWrite(pinR_PWM, 195);
+  delay(75);
 }
 
 // circumference not tested
@@ -268,11 +273,6 @@ void task2(void){
   if (!left_Far_Sensor && !right_Far_Sensor)  {// turn 360 T
     countT++;
     self_turn(delay_360);
-    digitalWrite(pinL_DIR, LOW);
-    digitalWrite(pinR_DIR, LOW);
-    analogWrite(pinL_PWM, 255);
-    analogWrite(pinR_PWM, 225);
-    delay(25);
     forward();
     delay(100);
     for (int i = 0; i < 250; ++i){
@@ -285,50 +285,15 @@ void task2(void){
   } else if (!left_Far_Sensor && !leftSensor){    //L-junction
     turn_left(delay_90);
     L_junct++;
-    
   } else if (!right_Far_Sensor && !rightSensor){
     turn_right(delay_90);
     L_junct++;
-    
   } else {          // straight line
     trace_line();
   }
 }
-/*
-void task2(void){
-  while (left_Far_Sensor && right_Far_Sensor )  { // not T
-    if (!left_Far_Sensor && !leftSensor){
-      turn_left(delay_90);
-    } else if (!right_Far_Sensor && !rightSensor){
-      turn_right(delay_90);
-    }else {          // straight line
-      trace_line();
-    }
-    bumperSensor = digitalRead(pinB_Sensor);
-    leftSensor = digitalRead(pinL_Sensor);
-    rightSensor = digitalRead(pinR_Sensor);
-    left_Far_Sensor = digitalRead(pinL_Far_Sensor);
-    right_Far_Sensor = digitalRead(pinR_Far_Sensor);
-  }
 
-  // T
-  countT++;
-  self_turn(delay_180);
-  analogWrite(pinL_PWM, 0);
-  analogWrite(pinR_PWM, 0);
-  delay(500);
-  self_turn(delay_180);
-  analogWrite(pinL_PWM, 0);
-  analogWrite(pinR_PWM, 0);
-  delay(500);
-  for (int i = 0; i < 350; ++i){
-    leftSensor = digitalRead(pinL_Sensor);
-    rightSensor = digitalRead(pinR_Sensor);
-    trace_line();
-    delay(1);
-  }
-*/
-void task3(void){
+void task3(void){  
   if (!left_Far_Sensor || !right_Far_Sensor){
     forward();
     delay(55);
@@ -338,10 +303,10 @@ void task3(void){
   if ( !left_Far_Sensor && !right_Far_Sensor ) {  // T-junction
     countT++;
     // stop for 1 second
+    analogWrite(pinL_PWM, global_spd+20);
+    analogWrite(pinR_PWM, global_spd);
     digitalWrite(pinL_DIR, LOW);
     digitalWrite(pinR_DIR, LOW);
-    analogWrite(pinL_PWM, 215);
-    analogWrite(pinR_PWM, 195);
     delay(25);
     analogWrite(pinL_PWM, 0);
     analogWrite(pinR_PWM, 0);
@@ -382,11 +347,6 @@ void task5(void){
     countT++;
     // 180 degree turn
     self_turn(delay_180);
-    digitalWrite(pinL_DIR, LOW);
-    digitalWrite(pinR_DIR, LOW);
-    analogWrite(pinL_PWM, 255);
-    analogWrite(pinR_PWM, 225);
-    delay(25);
     for (int i = 0; i < 350; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
@@ -425,7 +385,7 @@ void task7(void){
     turn_right(delay_90);
     in_C = true;
   }else if (in_C)
-    circumference();
+    trace_line();
   else
     trace_line();
 }
