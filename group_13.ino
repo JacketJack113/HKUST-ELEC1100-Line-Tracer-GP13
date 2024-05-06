@@ -9,6 +9,11 @@
   
 */
 
+/*  metadata
+distance between sensors (mm): 28 19 (tilted 1.847 degree) 21 (tilted -1.847 degree) 18.5 22
+distance between sensors and ground (mm): 35
+*/
+
 // assign meaningful names to those pins that will be used
 
 const int pinL_Sensor = A4;      //pin A5: left sensor 
@@ -112,6 +117,7 @@ void forward(){
   digitalWrite(pinR_DIR, HIGH); 
 }
 
+// min() for calibration: sometimes larger than 255
 void trace_line(){  // tracing the line
   if (leftSensor == rightSensor) {  // black, black (or white, white) -> go straight
       forward(); 
@@ -135,6 +141,7 @@ void turn_left(int delay_time){
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
   delay(delay_time);
+  // sharp turn by cancelling inertia
   analogWrite(pinL_PWM, 165);
   analogWrite(pinR_PWM, 235);
   digitalWrite(pinL_DIR, HIGH);
@@ -150,6 +157,7 @@ void turn_right(int delay_time){
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
   delay(delay_time);
+  // sharp turn by cancelling inertia
   analogWrite(pinL_PWM, 210);
   analogWrite(pinR_PWM, 170);
   digitalWrite(pinL_DIR, LOW);
@@ -157,12 +165,15 @@ void turn_right(int delay_time){
   delay(15);
   forward();
 }
+
+// for 180 and 360
 void self_turn(int delay_time){
   analogWrite(pinL_PWM, 255);
   analogWrite(pinR_PWM, 195);
   digitalWrite(pinL_DIR, HIGH);
   digitalWrite(pinR_DIR, LOW);
   delay(delay_time);
+  // sharp turn by cancelling inertia
   digitalWrite(pinL_DIR, LOW);
   digitalWrite(pinR_DIR, HIGH);
   analogWrite(pinL_PWM, 255);
@@ -194,6 +205,7 @@ void task1(void){
 
 void task2(void){
   if ((!left_Far_Sensor || !right_Far_Sensor) && L_junct >= 7){
+    // for detecting T-junctions as only L-junction will probably be detected
     forward();
     delay(55);
     left_Far_Sensor = digitalRead(pinL_Far_Sensor);
@@ -205,13 +217,14 @@ void task2(void){
     self_turn(delay_360);
     forward();
     delay(100);
+    // trace to right angle and position
     for (int i = 0; i < 150; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
       trace_line();
       delay(1);
     }
-    L_junct = 0;
+    L_junct = 0;  // reset L-junction count for other task
   } else if (!left_Far_Sensor && !leftSensor){    //L-junction
     turn_left(delay_90);
     L_junct++;
@@ -225,6 +238,7 @@ void task2(void){
 
 void task3(void){  
   if (!left_Far_Sensor || !right_Far_Sensor){
+    // for detecting T-junctions as only L-junction will probably be detected
     forward();
     delay(55);
     left_Far_Sensor = digitalRead(pinL_Far_Sensor);
@@ -233,6 +247,7 @@ void task3(void){
   if ( !left_Far_Sensor && !right_Far_Sensor ) {  // T-junction
     countT++;
     // stop for 1 second
+    // sharp stop by cancelling inertia
     analogWrite(pinL_PWM, global_spd+20);
     analogWrite(pinR_PWM, global_spd);
     digitalWrite(pinL_DIR, LOW);
@@ -254,6 +269,7 @@ void task3(void){
 
 void task4(void){
   if (!left_Far_Sensor || !right_Far_Sensor){
+    // for detecting T-junctions as only L-junction will probably be detected
     forward();
     delay(25);
     left_Far_Sensor = digitalRead(pinL_Far_Sensor);
@@ -270,6 +286,7 @@ void task4(void){
 
 void task5(void){
   if ((!left_Far_Sensor || !right_Far_Sensor) && L_junct == 1){
+    // for detecting T-junctions as only L-junction will probably be detected
     forward();
     delay(25);
     left_Far_Sensor = digitalRead(pinL_Far_Sensor);
@@ -279,6 +296,7 @@ void task5(void){
     countT++;
     // 180 degree turn
     self_turn(delay_180);
+    // prevent detecting same T-junction
     forward();
     delay(50);
     for (int i = 0; i < 250; ++i){
@@ -299,6 +317,7 @@ void task5(void){
 
 void task6(void){
   if (!left_Far_Sensor || !right_Far_Sensor){
+    // for detecting T-junctions as only L-junction will probably be detected
     forward();
     delay(55);
     left_Far_Sensor = digitalRead(pinL_Far_Sensor);
