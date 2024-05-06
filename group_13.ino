@@ -41,7 +41,8 @@ const int trace_spd = 120;
 const int backward_time = 500;
 // delay for different turning angles
 const int delay_90 = 320;
-const int delay_180 = 550;
+const int delay_180 = 400;
+const int delay_360 = 1000;
 
 // declare all functions
 void forward(void); // go forward
@@ -266,13 +267,15 @@ void task2(void){
   
   if (!left_Far_Sensor && !right_Far_Sensor)  {// turn 360 T
     countT++;
-    self_turn(delay_180*2);
+    self_turn(delay_360);
     digitalWrite(pinL_DIR, LOW);
     digitalWrite(pinR_DIR, LOW);
     analogWrite(pinL_PWM, 255);
     analogWrite(pinR_PWM, 225);
     delay(25);
-    for (int i = 0; i < 350; ++i){
+    forward();
+    delay(100);
+    for (int i = 0; i < 250; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
       trace_line();
@@ -335,11 +338,16 @@ void task3(void){
   if ( !left_Far_Sensor && !right_Far_Sensor ) {  // T-junction
     countT++;
     // stop for 1 second
+    digitalWrite(pinL_DIR, LOW);
+    digitalWrite(pinR_DIR, LOW);
+    analogWrite(pinL_PWM, 215);
+    analogWrite(pinR_PWM, 195);
+    delay(25);
     analogWrite(pinL_PWM, 0);
     analogWrite(pinR_PWM, 0);
-    delay(1000);
+    delay(975);
     // prevent detect same T-junction at next task
-    for (int i = 0; i < 300; ++i){
+    for (int i = 0; i < 200; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
       trace_line();
@@ -359,7 +367,7 @@ void task4(void){
   if ( !left_Far_Sensor && !right_Far_Sensor ) {  // T-junction
     countT++;
     turn_left(delay_90);
-  }else
+  } else
     trace_line();
 }
 
@@ -374,6 +382,11 @@ void task5(void){
     countT++;
     // 180 degree turn
     self_turn(delay_180);
+    digitalWrite(pinL_DIR, LOW);
+    digitalWrite(pinR_DIR, LOW);
+    analogWrite(pinL_PWM, 255);
+    analogWrite(pinR_PWM, 225);
+    delay(25);
     for (int i = 0; i < 350; ++i){
       leftSensor = digitalRead(pinL_Sensor);
       rightSensor = digitalRead(pinR_Sensor);
