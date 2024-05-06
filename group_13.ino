@@ -41,8 +41,8 @@ int countT = 1; // on the first T-junction at the beginning
 int L_junct = 0;
 bool in_C = false; // for task7
 
-const int global_spd = 195;
-const int trace_spd = 120;
+const int global_spd = 195;  // base forward speed
+const int trace_spd = 120;  // base speed for tracing line
 const int backward_time = 500;
 // delay for different turning angles
 const int delay_90 = 320;
@@ -52,9 +52,11 @@ const int delay_360 = 1000;
 // declare all functions
 void forward(void); // go forward
 void trace_line(void);  // tracing the line
-void turn_left(int delay_time); // turnings at L,T-junctions
+// turnings at L,T-junctions
+void turn_left(int delay_time);
 void turn_right(int delay_time);
 void self_turn(int delay_time);
+// splitting tasks by T-junctions
 void task1(void);
 void task2(void);
 void task3(void);
@@ -94,7 +96,6 @@ void loop(){
   rightSensor = digitalRead(pinR_Sensor);
   left_Far_Sensor = digitalRead(pinL_Far_Sensor);
   right_Far_Sensor = digitalRead(pinR_Far_Sensor);
-  bumperSensor == 1;
 
   if (countBumper == 0 || countBumper == 1)
     switch(countT){
